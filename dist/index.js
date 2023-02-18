@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.socket = void 0;
 var dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 var express_1 = __importDefault(require("express"));
@@ -28,15 +29,15 @@ var server = app.listen(5000, function () {
     console.log('app is listening on port: 5000 in development environment');
     (0, db_1.connectDB)();
 });
-var socket = new socket_io_1.Server(server, {
+exports.socket = new socket_io_1.Server(server, {
     cors: {
         origin: '*',
     },
 });
-socket.on('connection', function (socket) {
-    console.log("Socket initialized successfully!!");
+exports.socket.on('connection', function (socket) {
+    console.log("Client connected: ".concat(socket.id));
     socket.emit('connected', 'socket connection established');
-    socket.on('disconnrect', function () {
-        console.log('Client disconnected!!');
+    socket.on('disconnect', function () {
+        console.log("Client disconnected");
     });
 });

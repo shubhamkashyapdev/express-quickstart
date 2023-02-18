@@ -41,6 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createDevice = exports.getAllDevices = void 0;
 var Device_1 = __importDefault(require("../models/Device"));
+var index_1 = require("../index");
 var getAllDevices = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var devices, err_1;
     return __generator(this, function (_a) {
@@ -76,10 +77,10 @@ var createDevice = function (req, res) { return __awaiter(void 0, void 0, void 0
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                console.log(req.body);
                 return [4 /*yield*/, Device_1.default.create(req.body)];
             case 1:
                 newDevice = _a.sent();
+                index_1.socket.emit('new-device', newDevice);
                 res.status(200).json({
                     success: true,
                     data: newDevice,

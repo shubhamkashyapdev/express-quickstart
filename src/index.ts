@@ -29,16 +29,16 @@ const server = app.listen(5000, () => {
   connectDB()
 })
 
-const socket = new Server(server, {
+export const socket = new Server(server, {
   cors: {
     origin: '*',
   },
 })
 socket.on('connection', (socket: Socket) => {
-  console.log(`Socket initialized successfully!!`)
+  console.log(`Client connected: ${socket.id}`)
   socket.emit('connected', 'socket connection established')
 
-  socket.on('disconnrect', () => {
-    console.log('Client disconnected!!')
+  socket.on('disconnect', () => {
+    console.log(`Client disconnected`)
   })
 })

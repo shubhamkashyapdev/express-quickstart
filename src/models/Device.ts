@@ -4,6 +4,7 @@ import { DeviceType } from '../schemas/DeviceSchema'
 type DeviceDocument = DeviceType & Document
 
 const schema = new mongoose.Schema<DeviceDocument>({
+  // @ts-ignore
   deviceId: {
     type: Number,
     required: [true, 'Device ID is required'],

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import DeviceModel from '../models/Device'
-
+import { socket } from '../index'
 export const getAllDevices = async (req: Request, res: Response) => {
   try {
     const devices = await DeviceModel.find({})
@@ -21,8 +21,8 @@ export const getAllDevices = async (req: Request, res: Response) => {
 
 export const createDevice = async (req: Request, res: Response) => {
   try {
-    console.log(req.body)
     const newDevice = await DeviceModel.create(req.body)
+    socket.emit('new-device', newDevice)
     res.status(200).json({
       success: true,
       data: newDevice,
