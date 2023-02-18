@@ -6,12 +6,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose_1 = __importDefault(require("mongoose"));
 var schema = new mongoose_1.default.Schema({
     deviceId: {
-        type: String,
+        type: Number,
         required: [true, 'Device ID is required'],
+        unique: [true, 'Device ID already exists'],
     },
     deviceType: {
         type: String,
-        required: [true, 'Type is required'],
+        required: [true, 'Device Type is required'],
+    },
+    deviceName: {
+        type: String,
+        rquired: [true, 'Device Name is required'],
     },
 });
 var DeviceModel = mongoose_1.default.model('device', schema);

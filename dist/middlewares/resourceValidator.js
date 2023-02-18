@@ -35,68 +35,29 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createDevice = exports.getAllDevices = void 0;
-var Device_1 = __importDefault(require("../models/Device"));
-var getAllDevices = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var devices, err_1;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, Device_1.default.find({})];
-            case 1:
-                devices = _a.sent();
-                res.status(200).json({
-                    success: true,
-                    data: devices,
-                });
-                return [3 /*break*/, 3];
-            case 2:
-                err_1 = _a.sent();
-                if (err_1 instanceof Error) {
-                    console.log({ err: err_1 });
-                    res.status(500).json({
-                        success: false,
-                        error: err_1,
-                    });
-                }
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
-        }
-    });
-}); };
-exports.getAllDevices = getAllDevices;
-var createDevice = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var newDevice, err_2;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 2, , 3]);
-                console.log(req.body);
-                return [4 /*yield*/, Device_1.default.create(req.body)];
-            case 1:
-                newDevice = _a.sent();
-                res.status(200).json({
-                    success: true,
-                    data: newDevice,
-                });
-                return [3 /*break*/, 3];
-            case 2:
-                err_2 = _a.sent();
-                if (err_2 instanceof Error) {
-                    console.log({ err: err_2 });
-                    res.status(500).json({
-                        success: false,
-                        error: err_2,
-                    });
-                }
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
-        }
-    });
-}); };
-exports.createDevice = createDevice;
+var validator = function (schema) {
+    return function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+        var err_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, schema.parseAsync({
+                            body: req.body,
+                            query: req.query,
+                            params: req.params,
+                        })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/, next()];
+                case 2:
+                    err_1 = _a.sent();
+                    res.status(400).send(err_1.errors);
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    }); };
+};
+exports.default = validator;

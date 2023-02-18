@@ -1,20 +1,23 @@
 import mongoose, { Document } from 'mongoose'
+import { DeviceType } from '../schemas/DeviceSchema'
 
-type DeviceDocument = {
-  deviceId: string
-  type: string
-} & Document
+type DeviceDocument = DeviceType & Document
 
-const schema = new mongoose.Schema({
+const schema = new mongoose.Schema<DeviceDocument>({
   deviceId: {
-    type: String,
+    type: Number,
     required: [true, 'Device ID is required'],
+    unique: [true, 'Device ID already exists'],
   },
   deviceType: {
     type: String,
-    required: [true, 'Type is required'],
+    required: [true, 'Device Type is required'],
+  },
+  deviceName: {
+    type: String,
+    rquired: [true, 'Device Name is required'],
   },
 })
 
-const DeviceModel = mongoose.model<DeviceDocument>('device', schema)
+const DeviceModel = mongoose.model('device', schema)
 export default DeviceModel

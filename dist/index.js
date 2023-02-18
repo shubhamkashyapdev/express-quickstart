@@ -12,10 +12,17 @@ var db_1 = require("./config/db");
 // Routers
 var DeviceRouter_1 = __importDefault(require("./routers/DeviceRouter"));
 var app = (0, express_1.default)();
+app.use(express_1.default.json());
 app.use((0, cors_1.default)());
 app.use('/device', DeviceRouter_1.default);
 app.use('/', function (req, res) {
     res.status(200).json('Working');
+});
+app.use('*', function (req, res) {
+    res.status(404).json({
+        success: false,
+        message: 'You have lost!!',
+    });
 });
 var server = app.listen(5000, function () {
     console.log('app is listening on port: 5000 in development environment');

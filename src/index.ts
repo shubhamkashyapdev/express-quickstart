@@ -9,7 +9,7 @@ import { connectDB } from './config/db'
 import DeviceRouter from './routers/DeviceRouter'
 
 const app = express()
-
+app.use(express.json())
 app.use(cors())
 
 app.use('/device', DeviceRouter)
@@ -17,6 +17,13 @@ app.use('/device', DeviceRouter)
 app.use('/', (req: Request, res: Response) => {
   res.status(200).json('Working')
 })
+app.use('*', (req: Request, res: Response) => {
+  res.status(404).json({
+    success: false,
+    message: 'You have lost!!',
+  })
+})
+
 const server = app.listen(5000, () => {
   console.log('app is listening on port: 5000 in development environment')
   connectDB()
