@@ -1,8 +1,10 @@
 import mongoose from 'mongoose'
+import { MONGO_URI } from './credentials'
 
 export const connectDB = async () => {
   try {
-    await mongoose.connect(`${process.env.MONGO_URI}`)
+    console.log({ MONGO_URI })
+    await mongoose.connect(MONGO_URI)
     console.log(`connected to mongodb`)
   } catch (error) {
     if (error instanceof Error) {

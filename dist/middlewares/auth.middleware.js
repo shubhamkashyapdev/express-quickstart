@@ -39,29 +39,46 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.connectDB = void 0;
-var mongoose_1 = __importDefault(require("mongoose"));
-var credentials_1 = require("./credentials");
-var connectDB = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var error_1;
+exports.protect = void 0;
+var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+var credentials_1 = require("../config/credentials");
+var res_generic_1 = require("../utils/res-generic");
+var protect = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var tokenHeader, token, decoded, response;
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 2, , 3]);
-                console.log({ MONGO_URI: credentials_1.MONGO_URI });
-                return [4 /*yield*/, mongoose_1.default.connect(credentials_1.MONGO_URI)];
-            case 1:
-                _a.sent();
-                console.log("connected to mongodb");
-                return [3 /*break*/, 3];
-            case 2:
-                error_1 = _a.sent();
-                if (error_1 instanceof Error) {
-                    console.log({ error: error_1 });
-                }
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
+        try {
+            tokenHeader = req.headers['authorization'];
+            if (!tokenHeader)
+                return [2 /*return*/, res.status(401).json({
+                        STATUS_MESSAGE: 'FAILURE',
+                        STATUS_RESPONSE: 'Access Denied',
+                    })];
+            token = tokenHeader.split('Bearer')[1].trim();
+            if (!token)
+                return [2 /*return*/, res.status(401).json({
+                        STATUS_MESSAGE: 'FAILURE',
+                        STATUS_RESPONSE: 'Access Denied',
+                    })];
+            decoded = jsonwebtoken_1.default.verify(token, credentials_1.JWT_SECRET);
+            if (decoded) {
+                req.user = decoded.id;
+                next();
+            }
+            else {
+                response = (0, res_generic_1.resGeneric)({
+                    message: 'Invalid Token',
+                    status: 'FAILURE',
+                });
+                return [2 /*return*/, res.status(400).json(response)];
+            }
         }
+        catch (err) {
+            res.status(401).json({
+                STATUS_MESSAGE: 'FAILURE',
+                STATUS_RESPONSE: 'Unauthorized',
+            });
+        }
+        return [2 /*return*/];
     });
 }); };
-exports.connectDB = connectDB;
+exports.protect = protect;
